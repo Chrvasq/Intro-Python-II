@@ -1,4 +1,6 @@
 from room import Room
+from player import Player
+import sys
 
 # Declare all the rooms
 
@@ -38,6 +40,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player("Player 1", room["outside"])
 
 # Write a loop that:
 #
@@ -49,3 +52,30 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+def main():
+    playing = True
+
+    while playing:
+        valid_directions = ('n', 'w', 's', 'e')
+        connections = {
+            'n': player.current_room.n_to if hasattr(player.current_room, "n_to") else "",
+            's': player.current_room.s_to if hasattr(player.current_room, "s_to") else "",
+            'e': player.current_room.e_to if hasattr(player.current_room, "e_to") else "",
+            'w': player.current_room.w_to if hasattr(player.current_room, "w_to") else ""
+        }
+
+        print(player.current_room)
+
+        cmd = input('''Enter a direction you would like to travel or Q to quit: ''').lower()
+
+        if cmd == 'q':
+            playing = False
+        elif cmd not in valid_directions:
+            print(f"\n{cmd} is an invalid command.")
+        elif connections[cmd]:
+            player.current_room = connections[cmd]
+        else:
+            print("\nThere's no exit in that direction.")
+
+if __name__ == "__main__":
+    main()
